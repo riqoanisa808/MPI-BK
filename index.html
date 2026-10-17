@@ -51,7 +51,7 @@ textarea{width:100%;min-height:76px}
 .opt{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;margin:8px 0;cursor:pointer}
 .opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--bg))}
 .opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 18%,var(--bg))}
-.bar{height:8px;background:var(--line);border-radius:9px;overflow:hidden;margin-bottom:16px}.bar i{display:block;height:100%;background:var(--acc);width:0;transition:width .3s}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:16px}.bar i{display:block;height:100%;background:var(--acc);width:0;transition:width .3s}
 .sub{color:var(--mut)}
 :root{--on:#fff}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--on:#13262B}}:root[data-theme="dark"]{--on:#13262B}
 .hero{display:grid;gap:32px;grid-template-columns:1.3fr 1fr;align-items:center}
@@ -68,6 +68,8 @@ ol.tp li:nth-child(2){border-left-color:var(--c2)}ol.tp li:nth-child(3){border-l
 @keyframes lid{0%{transform:rotate(0)}40%{transform:rotate(-38deg)}100%{transform:rotate(0)}}
 .btn{border-radius:99px;box-shadow:0 4px 0 rgba(0,0,0,.25)}.btn:active{transform:translateY(3px);box-shadow:none}
 .opt:hover{border-color:var(--pri)}
+.result-card{background:var(--bg);border:1.5px solid var(--line);border-radius:14px;padding:20px;margin:20px 0;text-align:center}
+.score-badge{display:inline-block;font-size:2.8rem;font-weight:800;color:var(--pri);background:var(--sf);padding:10px 24px;border-radius:16px;border:2px solid var(--pri);margin:12px 0}
 @media (prefers-reduced-motion:reduce){.lid{animation:none}}
 footer{background:var(--ink);color:var(--bg);padding:32px 0;font-size:.92rem}
 @media print{nav,header,section:not(#lkpd),footer,body::before,.noprint{display:none!important}section#lkpd{padding:0}}
@@ -188,15 +190,71 @@ const T=[["Tugas 1: Dekomposisi (6 menit)","Uraikan masalah menjadi minimal 5 su
 $("#tugas").innerHTML=T.map(t=>`<div class="card" style="margin:16px 0"><h3>${t[0]}</h3><p>${t[1]}</p><textarea rows="${t[2]}" aria-label="${t[0]}" placeholder="${t[3]}"></textarea></div>`).join("");
 const Q=[["Memecah masalah besar menjadi bagian-bagian kecil yang lebih mudah ditangani disebut…",["Dekomposisi","Abstraksi","Algoritma","Pengenalan pola","Debugging"],0],["Ani menyadari bahwa setiap hari Jumat sampah kantin selalu didominasi plastik. Pilar BK yang ia gunakan adalah…",["Dekomposisi","Pengenalan pola","Abstraksi","Algoritma","Enkripsi"],1],["Denah evakuasi hanya menampilkan jalur dan pintu keluar tanpa menggambar isi ruangan secara rinci. Ini contoh dari…",["Dekomposisi","Pengenalan pola","Abstraksi","Debugging","Simulasi"],2],["Urutan langkah yang runtut, logis, dan jelas untuk menyelesaikan suatu masalah disebut…",["Pola","Abstraksi","Algoritma","Simulasi","Enkripsi"],2],["Kemampuan melihat kesamaan, keteraturan, atau tren dari berbagai masalah maupun data disebut…",["Dekomposisi","Abstraksi","Algoritma","Pengenalan pola","Debugging"],3],["Yang BUKAN ciri algoritma yang baik adalah…",["Runtut dan terstruktur","Jelas dan tidak ambigu","Langkah boleh ditafsirkan berbeda-beda oleh pengguna","Memiliki titik akhir (pasti berhenti)","Menghasilkan luaran yang benar"],2],["Informasi yang paling tidak penting untuk menentukan tempat pembuangan sampah adalah…",["Benda itu basah atau kering","Benda itu berbahaya atau tidak","Benda itu dapat didaur ulang atau tidak","Merek kemasan produk","Benda itu berbau menyengat atau tidak"],3],["Mengapa sebuah algoritma harus dapat diuji?",["Agar tampak lebih rumit dan canggih","Agar kesalahan langkah dapat ditemukan dan diperbaiki","Agar hanya satu orang yang dapat memahami","Agar tidak perlu lagi menggunakan flowchart","Agar memakan waktu pembuatan lebih lama"],1],["Pertanyaan “Apakah benda ini berbahaya?” sebaiknya diletakkan di awal karena…",["Paling mudah dijawab","Benda berbahaya tidak boleh salah masuk ke wadah lain demi keselamatan","Agar flowchart terlihat lebih panjang","Tidak ada alasan khusus, hanya urutan acak","Agar sampah berbahaya bisa langsung dibakar"],1],["Kegiatan Jumat Bersih dibagi menjadi empat tahapan: persiapan alat, pembagian area, pelaksanaan, dan evaluasi. Ini penerapan pilar…",["Dekomposisi","Abstraksi","Pengenalan pola","Enkripsi","Algoritma"],0]];
 
-// PASTE URL WEB APP APPS SCRIPT ANDA DI BAWAH INI (di dalam tanda kutip)
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyj8_W6S_HrJ1DiNcoaV4fPD_0JjRrihtOWLHxF-Lg767pCewn-PKsQQJMD4b6K_4g6/exec;
-
+const SCRIPT_URL="";/* tempel URL Web App Apps Script di antara tanda kutip */
 let siswa=null,qi=0,sk=0,lock=false;
-function kirim(m){if(!SCRIPT_URL)return;const d=new URLSearchParams({nama:siswa.nama,kelas:siswa.kelas,skor:m,benar:sk,total:Q.length});fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",body:d}).catch(()=>{const t=$("#st");if(t)t.textContent="Nilai gagal terkirim. Foto layar skor ini dan kirim ke guru."})}
-function mulai(){const n=$("#fn").value.trim(),k=$("#fk").value.trim();if(!n\vert{}\vert{}!k){$("#fe").textContent="Isi nama dan kelas dulu.";return}siswa={nama:n,kelas:k};qr()}
-function qr(){const z=$("#qz");if(!siswa){z.innerHTML=`<h3>Isi data dulu</h3><p><label>Nama: <input type="text" id="fn" maxlength="60" autocomplete="name"></label></p><p><label>Kelas: <input type="text" id="fk" maxlength="20" placeholder="contoh: X-3"></label></p><p class="bad" id="fe" aria-live="polite"></p><button class="btn" id="go">Mulai kuis</button>`;$("#go").onclick=mulai;return}if(qi>=Q.length){const m=sk*10;kirim(m);z.innerHTML=`<h3>Skor kamu: ${m} / 100</h3><p>${sk} dari ${Q.length} soal benar. ${m>=80?"Hebat, kamu sudah paham empat pilar!":"Baca ulang materinya, lalu coba lagi."}</p><p class="sub" id="st">${SCRIPT_URL?"Nilai kamu sudah dikirim ke guru.":""}</p><button class="btn" id="ulang">Ulangi kuis</button>`;$("#ulang").onclick=()=>{qi=0;sk=0;qr()};return}
-const q=Q[qi];lock=false;z.innerHTML=`<div class="bar"><i style="width:${qi/Q.length*100}%"></i></div><p class="sub">Soal ${qi+1} dari ${Q.length}</p><h3>${q[0]}</h3>`+q[1].map((o,i)=>`<button class="opt" data-i="${i}">${"ABCDE"[i]}. ${o}</button>`).join("")+`<p id="fb" aria-live="polite"></p>`;
-z.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{if(lock)return;lock=true;const i=+b.dataset.i,ok=i===q[2];sk+=ok;b.classList.add(ok?"right":"wrong");if(!ok)z.querySelectorAll(".opt")[q[2]].classList.add("right");$("#fb").innerHTML=(ok?'<span class="ok">Tepat!</span>':'<span class="bad">Belum tepat. Jawaban benar: '+"ABCDE"[q[2]]+".</span>")+' <button class="btn" id="nx">'+(qi==Q.length-1?"Lihat skor":"Soal berikutnya")+"</button>";$("#nx").onclick=()=>{qi++;qr()}})}
+
+function kirim(m){
+  if(!SCRIPT_URL) return;
+  const d = new URLSearchParams({nama:siswa.nama, kelas:siswa.kelas, skor:m, benar:sk, total:Q.length});
+  fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", body:d})
+  .then(()=>{
+    const t=$("#st");
+    if(t) t.textContent="✓ Nilai berhasil dikirim dan tersimpan di server guru.";
+  })
+  .catch(()=>{
+    const t=$("#st");
+    if(t) t.textContent="Nilai gagal terkirim secara otomatis. Silakan screenshot/foto layar skor ini.";
+  });
+}
+
+function mulai(){
+  const n=$("#fn").value.trim(), k=$("#fk").value.trim();
+  if(!n||!k){$("#fe").textContent="Isi nama dan kelas dulu."; return}
+  siswa={nama:n, kelas:k};
+  qr();
+}
+
+function qr(){
+  const z=$("#qz");
+  if(!siswa){
+    z.innerHTML=`<h3>Isi data dulu</h3><p><label>Nama: <input type="text" id="fn" maxlength="60" autocomplete="name"></label></p><p><label>Kelas: <input type="text" id="fk" maxlength="20" placeholder="contoh: X-3"></label></p><p class="bad" id="fe" aria-live="polite"></p><button class="btn" id="go">Mulai kuis</button>`;
+    $("#go").onclick=mulai;
+    return;
+  }
+  
+  if(qi>=Q.length){
+    const m=sk*10;
+    kirim(m);
+    z.innerHTML=`
+      <h3>Hasil Kuis Siswa</h3>
+      <div class="result-card">
+        <p style="margin:4px 0"><b>Nama:</b> ${siswa.nama}</p>
+        <p style="margin:4px 0"><b>Kelas:</b> ${siswa.kelas}</p>
+        <div class="score-badge">NILAI: ${m}</div>
+        <p style="margin:4px 0">Benar <b>${sk}</b> dari <b>${Q.length}</b> soal.</p>
+      </div>
+      <p style="margin:12px 0">${m>=80?"<b>Hebat!</b> Kamu sudah sangat memahami empat pilar berpikir komputasional.":"<b>Tetap semangat!</b> Pelajari kembali materi di atas dan coba lagi."}</p>
+      <p class="sub" id="st">${SCRIPT_URL?"Mengirim nilai ke server...":"(URL Apps Script belum diisi, nilai ditampilkan secara lokal)"}</p>
+      <button class="btn" id="ulang">Ulangi Kuis</button>
+    `;
+    $("#ulang").onclick=()=>{qi=0; sk=0; qr()};
+    return;
+  }
+
+  const q=Q[qi];
+  lock=false;
+  z.innerHTML=`<div class="bar"><i style="width:${qi/Q.length*100}%"></i></div><p class="sub">Soal ${qi+1} dari ${Q.length}</p><h3>${q[0]}</h3>`+q[1].map((o,i)=>`<button class="opt" data-i="${i}">${"ABCDE"[i]}. ${o}</button>`).join("")+`<p id="fb" aria-live="polite"></p>`;
+  z.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    if(lock) return;
+    lock=true;
+    const i=+b.dataset.i, ok=i===q[2];
+    sk+=ok;
+    b.classList.add(ok?"right":"wrong");
+    if(!ok) z.querySelectorAll(".opt")[q[2]].classList.add("right");
+    $("#fb").innerHTML=(ok?'<span class="ok">Tepat!</span>':'<span class="bad">Belum tepat. Jawaban benar: '+"ABCDE"[q[2]]+".</span>")+' <button class="btn" id="nx">'+(qi==Q.length-1?"Lihat Nilai Akhir":"Soal berikutnya")+"</button>";
+    $("#nx").onclick=()=>{qi++; qr()};
+  });
+}
 qr();
 </script>
 </body>
