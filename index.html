@@ -78,7 +78,7 @@ footer{background:var(--ink);color:var(--bg);padding:32px 0;font-size:.92rem}
 </head>
 <body>
 <nav aria-label="Navigasi"><div class="wrap">
-<a href="#tujuan">Tujuan</a><a href="#materi">Materi</a><a href="#manfaat">Manfaat</a><a href="#cocok">Aktivitas</a><a href="#lkpd">LKPD</a><a href="#kuis">Kuis</a>
+<a href="#tujuan">Tujuan</a><a href="#materi">Materi</a><a href="#manfaat">Manfaat</a><a href="#cocok">Aktivitas</a><a href="#lkpd">LKPD</a><a href="#kuis">Kuis</a><a href="#rekap">Rekap Nilai</a>
 </div></nav>
 
 <header><div class="wrap hero"><div>
@@ -151,6 +151,21 @@ footer{background:var(--ink);color:var(--bg);padding:32px 0;font-size:.92rem}
 <h2>Kuis</h2>
 <div class="card noprint" id="qz"></div>
 </div></section>
+
+<section id="rekap"><div class="wrap">
+<h2>Rekap Nilai Siswa</h2>
+<p class="sub">Daftar nilai kuis seluruh siswa yang telah tersimpan di server.</p>
+<div class="card">
+  <div style="margin-bottom: 16px; display:flex; gap:10px; align-items:center;" class="noprint">
+    <button class="btn" id="btn-refresh">🔄 Refresh Data Nilai</button>
+    <span class="sub" id="rekap-status"></span>
+  </div>
+  <div id="rekap-container">
+    <p class="sub">Klik "Refresh Data Nilai" atau selesaikan kuis untuk menampilkan rekapitulasi.</p>
+  </div>
+</div>
+</div></section>
+
 </main>
 
 <footer><div class="wrap">
@@ -190,7 +205,7 @@ const T=[["Tugas 1: Dekomposisi (6 menit)","Uraikan masalah menjadi minimal 5 su
 $("#tugas").innerHTML=T.map(t=>`<div class="card" style="margin:16px 0"><h3>${t[0]}</h3><p>${t[1]}</p><textarea rows="${t[2]}" aria-label="${t[0]}" placeholder="${t[3]}"></textarea></div>`).join("");
 const Q=[["Memecah masalah besar menjadi bagian-bagian kecil yang lebih mudah ditangani disebut…",["Dekomposisi","Abstraksi","Algoritma","Pengenalan pola","Debugging"],0],["Ani menyadari bahwa setiap hari Jumat sampah kantin selalu didominasi plastik. Pilar BK yang ia gunakan adalah…",["Dekomposisi","Pengenalan pola","Abstraksi","Algoritma","Enkripsi"],1],["Denah evakuasi hanya menampilkan jalur dan pintu keluar tanpa menggambar isi ruangan secara rinci. Ini contoh dari…",["Dekomposisi","Pengenalan pola","Abstraksi","Debugging","Simulasi"],2],["Urutan langkah yang runtut, logis, dan jelas untuk menyelesaikan suatu masalah disebut…",["Pola","Abstraksi","Algoritma","Simulasi","Enkripsi"],2],["Kemampuan melihat kesamaan, keteraturan, atau tren dari berbagai masalah maupun data disebut…",["Dekomposisi","Abstraksi","Algoritma","Pengenalan pola","Debugging"],3],["Yang BUKAN ciri algoritma yang baik adalah…",["Runtut dan terstruktur","Jelas dan tidak ambigu","Langkah boleh ditafsirkan berbeda-beda oleh pengguna","Memiliki titik akhir (pasti berhenti)","Menghasilkan luaran yang benar"],2],["Informasi yang paling tidak penting untuk menentukan tempat pembuangan sampah adalah…",["Benda itu basah atau kering","Benda itu berbahaya atau tidak","Benda itu dapat didaur ulang atau tidak","Merek kemasan produk","Benda itu berbau menyengat atau tidak"],3],["Mengapa sebuah algoritma harus dapat diuji?",["Agar tampak lebih rumit dan canggih","Agar kesalahan langkah dapat ditemukan dan diperbaiki","Agar hanya satu orang yang dapat memahami","Agar tidak perlu lagi menggunakan flowchart","Agar memakan waktu pembuatan lebih lama"],1],["Pertanyaan “Apakah benda ini berbahaya?” sebaiknya diletakkan di awal karena…",["Paling mudah dijawab","Benda berbahaya tidak boleh salah masuk ke wadah lain demi keselamatan","Agar flowchart terlihat lebih panjang","Tidak ada alasan khusus, hanya urutan acak","Agar sampah berbahaya bisa langsung dibakar"],1],["Kegiatan Jumat Bersih dibagi menjadi empat tahapan: persiapan alat, pembagian area, pelaksanaan, dan evaluasi. Ini penerapan pilar…",["Dekomposisi","Abstraksi","Pengenalan pola","Enkripsi","Algoritma"],0]];
 
-const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyIzMo6sluOthhZO3uoJ7aZsIl2R77FdIi3KuKEkhfxEQADClFo2RfNMvuVaVZQJo5I/exec";/* tempel URL Web App Apps Script di antara tanda kutip */
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyIzMo6sluOthhZO3uoJ7aZsIl2R77FdIi3KuKEkhfxEQADClFo2RfNMvuVaVZQJo5I/exec";
 let siswa=null,qi=0,sk=0,lock=false;
 
 function kirim(m){
@@ -200,11 +215,74 @@ function kirim(m){
   .then(()=>{
     const t=$("#st");
     if(t) t.textContent="✓ Nilai berhasil dikirim dan tersimpan di server guru.";
+    setTimeout(muatRekapNilai, 1500);
   })
   .catch(()=>{
     const t=$("#st");
     if(t) t.textContent="Nilai gagal terkirim secara otomatis. Silakan screenshot/foto layar skor ini.";
   });
+}
+
+function muatRekapNilai() {
+  const container = $("#rekap-container");
+  const status = $("#rekap-status");
+  if(!SCRIPT_URL) {
+    container.innerHTML = "<p class=\"bad\">URL Apps Script belum dikonfigurasi.</p>";
+    return;
+  }
+  
+  if(status) status.textContent = "Memuat data...";
+  
+  fetch(SCRIPT_URL)
+    .then(res => res.json())
+    .then(data => {
+      if(status) status.textContent = "";
+      if(!data || data.length === 0) {
+        container.innerHTML = "<p class=\"sub\">Belum ada data nilai siswa yang tersimpan.</p>";
+        return;
+      }
+      
+      let html = `
+        <div class="tbl">
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Waktu</th>
+                <th>Nama</th>
+                <th>Kelas</th>
+                <th>Skor</th>
+                <th>Benar / Total</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+      
+      data.forEach((row, index) => {
+        let tgl = row.tanggal;
+        if (typeof tgl === "string" && tgl.includes("T")) {
+          tgl = tgl.replace("T", " ").substring(0, 19);
+        }
+        
+        html += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${tgl}</td>
+            <td><b>${row.nama}</b></td>
+            <td>${row.kelas}</td>
+            <td><span class="hl">${row.skor}</span></td>
+            <td>${row.benar} / ${row.total}</td>
+          </tr>
+        `;
+      });
+      
+      html += `</tbody></table></div>`;
+      container.innerHTML = html;
+    })
+    .catch(err => {
+      if(status) status.textContent = "";
+      container.innerHTML = "<p class=\"bad\">Gagal memuat rekap nilai. Pastikan Apps Script sudah di-deploy dengan opsi \"Anyone\".</p>";
+    });
 }
 
 function mulai(){
@@ -255,7 +333,15 @@ function qr(){
     $("#nx").onclick=()=>{qi++; qr()};
   });
 }
+
+// Inisialisasi awal
 qr();
+
+// Pasang event listener untuk tombol Refresh Rekap Nilai
+document.getElementById("btn-refresh").onclick = muatRekapNilai;
+
+// Muat rekap nilai otomatis saat halaman terbuka
+muatRekapNilai();
 </script>
 </body>
 </html>
