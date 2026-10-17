@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MPI Berpikir Komputasional – Informatika Kelas X</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EDF3F0;--sf:#FFFFFF;--ink:#13262B;--mut:#4C6268;--line:#C9D8D2;--pri:#0E5A55;--pri-ink:#FFFFFF;--acc:#E39A2D;--ok:#1F7A3E;--bad:#B3302A;--c1:#2C6FB7;--c2:#C2552B;--c3:#7A4EB0;--c4:#0E7A5F;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1A1C;--sf:#172629;--ink:#E6F0EC;--mut:#9DB5B0;--line:#2B4045;--pri:#5CC4B8;--pri-ink:#07201D;--acc:#F0B259;--ok:#6FD08E;--bad:#FF8A80;--c1:#7FB4F0;--c2:#F0956B;--c3:#BE9BEB;--c4:#5CD1B0;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F1A1C;--sf:#172629;--ink:#E6F0EC;--mut:#9DB5B0;--line:#2B4045;--pri:#5CC4B8;--pri-ink:#07201D;--acc:#F0B259;--ok:#6FD08E;--bad:#FF8A80;--c1:#7FB4F0;--c2:#F0956B;--c3:#BE9BEB;--c4:#5CD1B0;color-scheme:dark}
+html{scroll-padding-top:calc(60px + env(safe-area-inset-top,0px));scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 "Nunito Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.15;margin:0 0 .6em}
+h2{font-size:clamp(1.7rem,4vw,2.4rem)}h3{font-size:1.2rem}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--sf);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:4px;overflow-x:auto;padding-top:8px;padding-bottom:8px}
+nav a{color:var(--ink);text-decoration:none;padding:6px 12px;border-radius:99px;white-space:nowrap;font-weight:600;font-size:.92rem}
+nav a:hover,nav a:focus-visible{background:var(--pri);color:var(--pri-ink);outline:none}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--sf);z-index:30}
+header{background:var(--pri);color:var(--pri-ink);padding:64px 0 56px}
+header h1{font-size:clamp(2.3rem,7vw,4.4rem);font-weight:800;max-width:14ch}
+header p{max-width:52ch;margin:.4em 0}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.meta span{border:1.5px solid currentColor;border-radius:8px;padding:4px 12px;font-weight:700;font-size:.9rem}
+section{padding:56px 0}
+.card{background:var(--sf);border:1px solid var(--line);border-radius:14px;padding:22px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+ol.tp{padding:0;margin:0;list-style:none;counter-reset:t;display:grid;gap:12px}
+ol.tp li{counter-increment:t;display:flex;gap:14px;background:var(--sf);border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+ol.tp li::before{content:counter(t);flex:none;width:32px;height:32px;border-radius:50%;background:var(--acc);color:#13262B;font-weight:800;display:grid;place-items:center}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 14px}
+.tabs button,.btn{font:inherit;font-weight:700;border:2px solid var(--pri);background:transparent;color:var(--pri);border-radius:10px;padding:8px 16px;cursor:pointer}
+.tabs button[aria-selected="true"],.btn{background:var(--pri);color:var(--pri-ink)}
+.btn.alt{background:transparent;color:var(--pri)}
+button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.pil{border-left:8px solid var(--pc);}
+.pil dl{margin:0;display:grid;gap:10px}.pil dt{font-weight:800;color:var(--pc)}.pil dd{margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chips button{font:inherit;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:99px;padding:6px 14px;cursor:pointer}
+.chips button[aria-pressed="true"]{border-color:var(--pri);background:var(--pri);color:var(--pri-ink)}
+.trace{background:var(--bg);border-radius:10px;padding:12px 16px;margin:0;list-style:none;display:grid;gap:4px}
+.hl{background:var(--acc);color:#13262B;padding:1px 8px;border-radius:6px;font-weight:800}
+.tbl{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:480px}td,th{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+select,textarea,input[type=text]{font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:8px;padding:7px 10px;max-width:100%}
+textarea{width:100%;min-height:76px}
+.ok{color:var(--ok);font-weight:700}.bad{color:var(--bad);font-weight:700}
+.opt{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;margin:8px 0;cursor:pointer}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--bg))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 18%,var(--bg))}
+.bar{height:8px;background:var(--line);border-radius:9px;overflow:hidden;margin-bottom:16px}.bar i{display:block;height:100%;background:var(--acc);width:0;transition:width .3s}
+.sub{color:var(--mut)}
+:root{--on:#fff}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--on:#13262B}}:root[data-theme="dark"]{--on:#13262B}
+.hero{display:grid;gap:32px;grid-template-columns:1.3fr 1fr;align-items:center}
+@media (max-width:760px){.hero{grid-template-columns:1fr}header{padding:44px 0 36px}}
+header{background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,.22) 2px,transparent 0);background-size:26px 26px}
+h2::after{content:"";display:block;width:84px;height:7px;border-radius:9px;margin-top:10px;background:linear-gradient(90deg,var(--c1) 25%,var(--c2) 25% 50%,var(--c3) 50% 75%,var(--c4) 75%)}
+.card{border-radius:18px;box-shadow:0 5px 0 -1px var(--line)}
+ol.tp li{border-left:8px solid var(--c1);border-radius:14px;align-items:center}
+ol.tp li:nth-child(2){border-left-color:var(--c2)}ol.tp li:nth-child(3){border-left-color:var(--c3)}ol.tp li:nth-child(4){border-left-color:var(--c4)}ol.tp li:nth-child(5){border-left-color:var(--acc)}
+.tabs button{border-color:var(--pc);color:var(--ink);background:var(--bg);border-radius:99px}
+.tabs button[aria-selected="true"]{background:var(--pc);color:var(--on)}
+.hero svg{width:100%;max-width:360px;justify-self:center;filter:drop-shadow(0 10px 0 rgba(0,0,0,.14))}
+.lid{transform-box:fill-box;transform-origin:left bottom;animation:lid 1.3s ease-in-out both}
+@keyframes lid{0%{transform:rotate(0)}40%{transform:rotate(-38deg)}100%{transform:rotate(0)}}
+.btn{border-radius:99px;box-shadow:0 4px 0 rgba(0,0,0,.25)}.btn:active{transform:translateY(3px);box-shadow:none}
+.opt:hover{border-color:var(--pri)}
+@media (prefers-reduced-motion:reduce){.lid{animation:none}}
+footer{background:var(--ink);color:var(--bg);padding:32px 0;font-size:.92rem}
+@media print{nav,header,section:not(#lkpd),footer,body::before,.noprint{display:none!important}section#lkpd{padding:0}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bar i{transition:none}}
+</style>
+</head>
+<body>
+<nav aria-label="Navigasi"><div class="wrap">
+<a href="#tujuan">Tujuan</a><a href="#materi">Materi</a><a href="#manfaat">Manfaat</a><a href="#cocok">Aktivitas</a><a href="#lkpd">LKPD</a><a href="#kuis">Kuis</a>
+</div></nav>
+
+<header><div class="wrap hero"><div>
+<p class="sub" style="color:inherit;opacity:.85">Media Pembelajaran Interaktif · Informatika · Kelas X · Fase E</p>
+<h1>Berpikir Komputasional</h1>
+<p>Pecah masalah besar, cari polanya, sederhanakan, lalu tuliskan langkahnya. Kita mulai dari masalah nyata di sekolah: sampah yang menumpuk dan tercampur.</p>
+<div class="meta"><span>Penyusun: Riqa Anisa, S.Pd.</span><span>SMAN 1 Mentaya Hilir Selatan</span><span>Kurikulum Merdeka</span></div>
+</div><svg viewBox="0 0 320 250" role="img" aria-label="Empat tempat sampah: organik, daur ulang, residu, dan B3"><g font-family="Bricolage Grotesque,sans-serif" font-weight="700" text-anchor="middle"><ellipse cx="160" cy="232" rx="150" ry="8" fill="rgba(0,0,0,.18)"/><g><rect x="10" y="110" width="60" height="118" rx="9" fill="#2E9E5B"/><rect class="lid" style="animation-delay:.3s" x="4" y="94" width="72" height="17" rx="6" fill="#23804A"/><text x="40" y="178" font-size="30">🍌</text><text x="40" y="246" font-size="13" fill="currentColor">Organik</text></g><g><rect x="90" y="110" width="60" height="118" rx="9" fill="#2C6FB7"/><rect class="lid" style="animation-delay:.7s" x="84" y="94" width="72" height="17" rx="6" fill="#1F5593"/><text x="120" y="178" font-size="30">♻️</text><text x="120" y="246" font-size="13" fill="currentColor">Daur ulang</text></g><g><rect x="170" y="110" width="60" height="118" rx="9" fill="#7B8A8F"/><rect class="lid" style="animation-delay:1.1s" x="164" y="94" width="72" height="17" rx="6" fill="#5F6E73"/><text x="200" y="178" font-size="30">🍬</text><text x="200" y="246" font-size="13" fill="currentColor">Residu</text></g><g><rect x="250" y="110" width="60" height="118" rx="9" fill="#C94A3A"/><rect class="lid" style="animation-delay:1.5s" x="244" y="94" width="72" height="17" rx="6" fill="#A53A2D"/><text x="280" y="178" font-size="30">🔋</text><text x="280" y="246" font-size="13" fill="currentColor">B3</text></g></g></svg></div></header>
+
+<main>
+<section id="tujuan"><div class="wrap">
+<h2>Tujuan pembelajaran</h2>
+<p class="sub">Setelah mengikuti pembelajaran, siswa dapat:</p>
+<ol class="tp">
+<li>Menjelaskan empat pilar berpikir komputasional (dekomposisi, pengenalan pola, abstraksi, algoritma) dengan contoh dari kehidupan sehari-hari.</li>
+<li>Menguraikan masalah “sampah menumpuk” menjadi bagian-bagian kecil secara runtut (dekomposisi).</li>
+<li>Menemukan pola jenis sampah dan menentukan informasi penting serta yang diabaikan (pengenalan pola dan abstraksi).</li>
+<li>Menyusun algoritma pemilahan sampah yang benar, jelas, dan dapat diuji.</li>
+<li>Menunjukkan sikap kolaboratif, teliti, dan peduli lingkungan selama bekerja kelompok.</li>
+</ol>
+</div></section>
+
+<section id="materi" style="background:var(--sf)"><div class="wrap">
+<h2>Materi: empat pilar berpikir komputasional</h2>
+<p>Berpikir komputasional (<i>computational thinking</i>) adalah cara berpikir menyelesaikan masalah dengan langkah terstruktur, sehingga solusinya dapat dijalankan manusia maupun komputer. Ini bukan berarti berpikir seperti komputer, dan bukan hanya untuk orang yang pandai memprogram.</p>
+<div class="card" style="display:grid;gap:20px;grid-template-columns:minmax(0,340px) 1fr;align-items:center;margin:24px 0"><video controls playsinline preload="metadata" src="video-bk.mp4" style="width:100%;border-radius:14px;background:#000;max-height:80vh" aria-label="Video: Cara berpikir komputasional mengurai masalah rumit"></video><div><h3>🎬 Tonton dulu videonya</h3><p>Video singkat (sekitar 1,5 menit) tentang cara berpikir komputasional untuk mengurai masalah yang rumit. Setelah menonton, lanjut baca empat pilar di bawah dan coba kaitkan dengan contoh yang kamu lihat.</p><p class="sub" style="margin:0">Pertanyaan untuk diingat: pilar mana yang disebut di video, dan apa contohnya?</p></div></div>
+<style>@media (max-width:700px){#materi .card[style*="minmax(0,340px)"]{grid-template-columns:1fr!important}}</style>
+<p><b>Masalah kita:</b> sampah di kantin menumpuk dan tercampur. Pilih satu pilar untuk melihat artinya.</p>
+<div class="tabs" role="tablist" id="tabs"></div>
+<div class="card pil" id="pilar" aria-live="polite"></div>
+
+<h3 style="margin-top:36px">Coba uji algoritma pemilahan</h3>
+<p>Algoritma yang baik bisa diuji dengan benda apa pun. Pilih satu benda sampah dan ikuti langkahnya.</p>
+<div class="chips" id="items"></div>
+<ol class="trace" id="trace"><li class="sub">Pilih benda di atas.</li></ol>
+<p class="sub" style="margin-top:14px"><b>Ciri algoritma yang baik:</b> runtut (urutan benar), jelas (satu arti), terbatas (pasti berakhir), dan dapat diuji (hasil bisa dicek dengan contoh nyata). Pertanyaan “berbahaya?” ditaruh paling awal karena benda berbahaya tidak boleh salah masuk wadah.</p>
+</div></section>
+
+<section id="manfaat"><div class="wrap">
+<h2>Manfaat berpikir komputasional dalam kehidupan sehari-hari</h2>
+<div class="grid" id="mf"></div>
+<p style="margin-top:20px"><b>Untuk direnungkan:</b> masalah apa di rumah atau sekolahmu yang bisa diselesaikan dengan empat pilar ini?</p>
+</div></section>
+
+<section id="cocok" style="background:var(--sf)"><div class="wrap">
+<h2>Aktivitas: cocokkan pilar dengan situasinya</h2>
+<h3>A. Cocokkan pilar dengan pengertiannya</h3>
+<div class="tbl"><table id="ta"></table></div>
+<h3 style="margin-top:28px">B. Tentukan pilar pada tiap situasi</h3>
+<div class="tbl"><table id="tb"></table></div>
+<p style="margin-top:16px"><button class="btn" id="cek">Periksa jawaban</button> <button class="btn alt" id="rst">Ulangi</button></p>
+<p id="hasil" aria-live="polite"><b></b></p>
+<h3 style="margin-top:28px">C. Contoh sendiri</h3>
+<p>Pilih satu aktivitas sehari-hari (bukan mi instan atau rute sekolah), lalu uraikan dengan empat pilar. Tulis di LKPD atau buku catatanmu.</p>
+</div></section>
+
+<section id="lkpd"><div class="wrap">
+<h2>LKPD 1: merancang sistem pemilahan sampah kantin</h2>
+<div class="card">
+<p><b>Kasus:</b> Kantin sekolah selalu ramai saat istirahat. Setelah istirahat, sampah menumpuk di satu tempat, sisa makanan tercampur plastik, dan petugas kebersihan kesulitan memilahnya. Tim Adiwiyata meminta siswa merancang cara agar sampah tertata sejak dibuang.</p>
+<p><b>Masalah utama:</b> bagaimana membuat sistem pemilahan sampah di kantin yang mudah diikuti semua orang?</p>
+<p class="sub">Kerjakan berkelompok (waktu total 30 menit). Setiap anggota wajib berkontribusi.</p>
+<p><label>Kelompok / kelas: <input type="text" size="18"></label> <label>Ketua: <input type="text" size="12"></label> <label>Pencatat: <input type="text" size="12"></label> <label>Juru bicara: <input type="text" size="12"></label></p>
+</div>
+<div id="tugas"></div>
+<p class="noprint"><button class="btn" onclick="window.print()">Cetak LKPD</button></p>
+</div></section>
+
+<section id="kuis" style="background:var(--sf)"><div class="wrap">
+<h2>Kuis</h2>
+<div class="card noprint" id="qz"></div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+<p><b>MPI Informatika Kelas X Fase E · Disusun oleh Riqa Anisa, S.Pd.</b></p>
+<p>Referensi: Kemendikbudristek, <i>Capaian Pembelajaran Informatika Fase E</i> dan <i>Buku Siswa Informatika SMA/MA Kelas X</i>; Wing, J. M. (2006), Computational Thinking, <i>Communications of the ACM</i> 49(3); Panduan Program Adiwiyata, KLHK.</p>
+</div></footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const P=[
+{n:"Dekomposisi",c:"--c1",a:"Memecah masalah besar menjadi bagian-bagian kecil yang lebih mudah dikerjakan.",q:"Apa saja bagian dari masalah ini?",s:"Sampah dihasilkan, dibuang, dikumpulkan, diangkut, dan diolah. Tiap bagian dibahas sendiri.",m:"Menyiapkan bahan, merebus air, memasak mi, mencampur bumbu, menyajikan."},
+{n:"Pengenalan Pola",c:"--c2",a:"Mencari kesamaan, keteraturan, atau pengulangan pada masalah atau data.",q:"Apa yang berulang atau mirip?",s:"Sampah kantin selalu terdiri dari sisa makanan, bungkus plastik, kertas, dan botol. Jam ramai selalu saat istirahat.",m:"Hampir semua mi instan memakai langkah yang sama, hanya takaran air yang berbeda."},
+{n:"Abstraksi",c:"--c3",a:"Mengambil informasi yang penting dan mengabaikan detail yang tidak diperlukan.",q:"Mana yang penting, mana yang boleh diabaikan?",s:"Penting: bahan dan kondisi sampah (basah/kering, berbahaya atau tidak). Diabaikan: merek, warna, ukuran kemasan.",m:"Yang penting takaran air dan waktu masak; warna bungkus tidak penting."},
+{n:"Algoritma",c:"--c4",a:"Menyusun langkah-langkah yang runtut, jelas, dan terbatas untuk menyelesaikan masalah.",q:"Apa langkah pertama, kedua, dan seterusnya?",s:"Langkah berurutan untuk menentukan ke tempat sampah mana suatu benda dibuang.",m:"(1) Didihkan 400 ml air, (2) masukkan mi, (3) tunggu 3 menit, (4) tambahkan bumbu, (5) sajikan."}];
+const tabs=$("#tabs");
+P.forEach((p,i)=>{const b=document.createElement("button");b.textContent=["🧩","🔍","🎯","📋"][i]+" "+p.n;b.role="tab";b.style.setProperty("--pc",`var(${p.c})`);b.onclick=()=>show(i);tabs.append(b)});
+function show(i){const p=P[i];[...tabs.children].forEach((b,j)=>b.setAttribute("aria-selected",j==i));
+const e=$("#pilar");e.style.setProperty("--pc",`var(${p.c})`);
+e.innerHTML=`<h3 style="font-size:1.6rem">${["🧩","🔍","🎯","📋"][i]} ${p.n}</h3><dl><div><dt>Artinya</dt><dd>${p.a}</dd></div><div><dt>Pertanyaan penuntun</dt><dd>${p.q}</dd></div><div><dt>Contoh: sampah kantin</dt><dd>${p.s}</dd></div><div><dt>Contoh: memasak mi instan</dt><dd>${p.m}</dd></div></dl>`}
+show(0);
+const I=[["Baterai bekas",1,0,0],["Kulit pisang",0,1,0],["Botol plastik bersih",0,0,1],["Bungkus snack berminyak",0,0,0],["Lampu bekas",1,0,0],["Kardus bersih",0,0,1]];
+I.forEach((x,i)=>{const b=document.createElement("button");b.textContent=x[0];b.setAttribute("aria-pressed","false");b.onclick=()=>{[...$("#items").children].forEach(c=>c.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");run(x)};$("#items").append(b)});
+function run([n,b3,og,dl]){const y=v=>v?"Ya":"Tidak";let t=[`Langkah 1. Ambil benda: <b>${n}</b>`,`Langkah 2. Berbahaya (baterai, obat, lampu)? <b>${y(b3)}</b>`],w;
+if(b3)w="B3";else{t.push(`Langkah 3. Sisa makanan atau tumbuhan? <b>${y(og)}</b>`);if(og)w="Organik";else{t.push(`Langkah 4. Dapat didaur ulang dan bersih? <b>${y(dl)}</b>`);w=dl?"Anorganik daur ulang":"Residu"}}
+t.push(`Selesai. Buang ke wadah <span class="hl">${w}</span>`);$("#trace").innerHTML=t.map(s=>`<li>${s}</li>`).join("")}
+const M=[["Di rumah","Menyusun jadwal piket: bagi tugas (dekomposisi), lihat siapa sering lupa (pola), catat hanya hari dan nama (abstraksi), tulis urutan kerja (algoritma)."],["Perjalanan","Merencanakan rute: bagi menjadi beberapa ruas, kenali jam macet yang berulang, abaikan detail toko di pinggir jalan, lalu tentukan langkah belok demi belok."],["Memasak","Resep adalah algoritma. Dengan polanya, kamu bisa memasak makanan baru lebih cepat."],["Belajar","Tugas besar dipecah menjadi jadwal harian, pola soal ujian dikenali, dan catatan diringkas ke poin penting."],["Lingkungan","Memilah sampah, menghemat air dan listrik, atau mengatur piket kebersihan dengan langkah yang jelas dan bisa diikuti semua orang."],["Teknologi dan karier","Aplikasi, game, dan kecerdasan artifisial dibuat dengan cara yang sama. Cara berpikir ini berguna di profesi apa pun, bukan hanya programmer."]];
+$("#mf").innerHTML=M.map((m,i)=>`<div class="card" style="border-top:8px solid var(--c${i%4+1})"><h3>${["🏠","🧭","🍜","📚","🌱","💻"][i]} ${m[0]}</h3><p style="margin:0">${m[1]}</p></div>`).join("");
+const L=["Dekomposisi","Pengenalan pola","Abstraksi","Algoritma"],D=["Mengambil hal penting dan membuang detail yang tidak perlu","Menyusun langkah yang runtut dan jelas","Memecah masalah besar menjadi bagian kecil","Mencari kesamaan atau pengulangan"],AD=[2,3,0,1];
+const S=["Aldi membagi tugas membersihkan kelas menjadi menyapu, mengepel, dan membuang sampah.","Sari menyadari bahwa setiap hari Senin kantin paling ramai.","Peta jalur evakuasi hanya menampilkan jalan dan pintu keluar, tanpa menggambar isi tiap ruangan.","Dina menulis urutan langkah mencuci tangan yang benar dari awal sampai akhir."],SA=[0,1,2,3];
+const opts=a=>`<select><option value="">Pilih…</option>${a.map((x,i)=>`<option value="${i}">${x}</option>`).join("")}</select>`;
+$("#ta").innerHTML="<tr><th>Pilar</th><th>Pengertian</th></tr>"+L.map((l,i)=>`<tr><td>${i+1}. ${l}</td><td>${opts(D)}</td></tr>`).join("");
+$("#tb").innerHTML="<tr><th>Situasi</th><th>Pilar</th></tr>"+S.map(s=>`<tr><td>${s}</td><td>${opts(L)}</td></tr>`).join("");
+const sel=[...document.querySelectorAll("#ta select,#tb select")],key=[...AD,...SA];
+$("#cek").onclick=()=>{let k=0,e=0;sel.forEach((s,i)=>{const r=s.value!==""&&+s.value===key[i];s.className=r?"ok":"bad";k+=r;e+=s.value===""});$("#hasil").innerHTML=e?`<span class="bad">Masih ada ${e} pilihan yang kosong.</span>`:`<b>Skor: ${k} dari 8.</b> ${k==8?"Semua tepat!":"Pilihan bertanda merah masih keliru, coba lagi."}`};
+$("#rst").onclick=()=>{sel.forEach(s=>{s.value="";s.className=""});$("#hasil").innerHTML=""};
+const T=[["Tugas 1: Dekomposisi (6 menit)","Uraikan masalah menjadi minimal 5 submasalah yang berbeda dan tidak tumpang tindih, beserta alasan pentingnya. Petunjuk: dari mana sampah berasal? siapa yang membuang? ke mana dibuang? siapa yang mengumpulkan? apa yang terjadi setelahnya?",5,"Submasalah dan alasannya"],["Tugas 2: Pengenalan pola (5 menit)","a. Kelompokkan jenis sampah di kantin dalam minimal 4 kategori (contoh dan ciri umum). b. Tulis pola kebiasaan membuang sampah (waktu, tempat, jenis).",2,"Kategori, contoh, ciri / pola kebiasaan"],["Tugas 3: Abstraksi (4 menit)","Tulis minimal 3 informasi PENTING untuk menentukan tempat sampah dan minimal 3 informasi yang DIABAIKAN.",2,"Informasi penting / informasi diabaikan"],["Tugas 4: Algoritma (13 menit)","Susun algoritma pemilahan satu benda sampah di kantin. Pastikan runtut, jelas, terbatas, dan lolos uji dengan beberapa benda.",5,"Langkah 1, 2, 3, …"],["Tugas 5: Refleksi individu (4 menit)","Pilar yang paling mudah dan paling sulit bagiku, dan satu hal yang akan kulakukan agar sampah di sekolahku lebih tertata.",3,"Refleksiku"]];
+$("#tugas").innerHTML=T.map(t=>`<div class="card" style="margin:16px 0"><h3>${t[0]}</h3><p>${t[1]}</p><textarea rows="${t[2]}" aria-label="${t[0]}" placeholder="${t[3]}"></textarea></div>`).join("");
+const Q=[["Memecah masalah besar menjadi bagian-bagian kecil yang lebih mudah ditangani disebut…",["Dekomposisi","Abstraksi","Algoritma","Pengenalan pola","Debugging"],0],["Ani menyadari bahwa setiap hari Jumat sampah kantin selalu didominasi plastik. Pilar BK yang ia gunakan adalah…",["Dekomposisi","Pengenalan pola","Abstraksi","Algoritma","Enkripsi"],1],["Denah evakuasi hanya menampilkan jalur dan pintu keluar tanpa menggambar isi ruangan secara rinci. Ini contoh dari…",["Dekomposisi","Pengenalan pola","Abstraksi","Debugging","Simulasi"],2],["Urutan langkah yang runtut, logis, dan jelas untuk menyelesaikan suatu masalah disebut…",["Pola","Abstraksi","Algoritma","Simulasi","Enkripsi"],2],["Kemampuan melihat kesamaan, keteraturan, atau tren dari berbagai masalah maupun data disebut…",["Dekomposisi","Abstraksi","Algoritma","Pengenalan pola","Debugging"],3],["Yang BUKAN ciri algoritma yang baik adalah…",["Runtut dan terstruktur","Jelas dan tidak ambigu","Langkah boleh ditafsirkan berbeda-beda oleh pengguna","Memiliki titik akhir (pasti berhenti)","Menghasilkan luaran yang benar"],2],["Informasi yang paling tidak penting untuk menentukan tempat pembuangan sampah adalah…",["Benda itu basah atau kering","Benda itu berbahaya atau tidak","Benda itu dapat didaur ulang atau tidak","Merek kemasan produk","Benda itu berbau menyengat atau tidak"],3],["Mengapa sebuah algoritma harus dapat diuji?",["Agar tampak lebih rumit dan canggih","Agar kesalahan langkah dapat ditemukan dan diperbaiki","Agar hanya satu orang yang dapat memahami","Agar tidak perlu lagi menggunakan flowchart","Agar memakan waktu pembuatan lebih lama"],1],["Pertanyaan “Apakah benda ini berbahaya?” sebaiknya diletakkan di awal karena…",["Paling mudah dijawab","Benda berbahaya tidak boleh salah masuk ke wadah lain demi keselamatan","Agar flowchart terlihat lebih panjang","Tidak ada alasan khusus, hanya urutan acak","Agar sampah berbahaya bisa langsung dibakar"],1],["Kegiatan Jumat Bersih dibagi menjadi empat tahapan: persiapan alat, pembagian area, pelaksanaan, dan evaluasi. Ini penerapan pilar…",["Dekomposisi","Abstraksi","Pengenalan pola","Enkripsi","Algoritma"],0]];
+let qi=0,sk=0,lock=false;
+function qr(){const z=$("#qz");if(qi>=Q.length){const m=sk*10;z.innerHTML=`<h3>Skor kamu: ${m} / 100</h3><p>${sk} dari ${Q.length} soal benar. ${m>=80?"Hebat, kamu sudah paham empat pilar!":"Baca ulang materinya, lalu coba lagi."}</p><button class="btn" id="ulang">Ulangi kuis</button>`;$("#ulang").onclick=()=>{qi=0;sk=0;qr()};return}
+const q=Q[qi];lock=false;z.innerHTML=`<div class="bar"><i style="width:${qi/Q.length*100}%"></i></div><p class="sub">Soal ${qi+1} dari ${Q.length}</p><h3>${q[0]}</h3>`+q[1].map((o,i)=>`<button class="opt" data-i="${i}">${"ABCDE"[i]}. ${o}</button>`).join("")+`<p id="fb" aria-live="polite"></p>`;
+z.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{if(lock)return;lock=true;const i=+b.dataset.i,ok=i===q[2];sk+=ok;b.classList.add(ok?"right":"wrong");if(!ok)z.querySelectorAll(".opt")[q[2]].classList.add("right");$("#fb").innerHTML=(ok?'<span class="ok">Tepat!</span>':'<span class="bad">Belum tepat. Jawaban benar: '+"ABCDE"[q[2]]+".</span>")+' <button class="btn" id="nx">'+(qi==Q.length-1?"Lihat skor":"Soal berikutnya")+"</button>";$("#nx").onclick=()=>{qi++;qr()}})}
+qr();
+</script>
+</body>
+</html>
